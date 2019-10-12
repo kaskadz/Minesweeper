@@ -8,20 +8,15 @@ namespace MineSweeper.Forms
     {
         public GameSettings GameSettings { get; private set; }
 
-        private GameSettings CreateGameSettings()
-        {
-            return new GameSettings((int)RowsSelector.Value, (int)ColumnsSelector.Value, (int)MinesSelector.Value);
-        }
+        private GameSettings CreateGameSettings() =>
+            new GameSettings((int)RowsSelector.Value, (int)ColumnsSelector.Value, (int)MinesSelector.Value);
 
         public GameSettingsPopup()
         {
             InitializeComponent();
         }
 
-        private void GameSettingsPopup_Load(object sender, EventArgs e)
-        {
-            SetDefaultValues();
-        }
+        private void GameSettingsPopup_Load(object sender, EventArgs e) => SetDefaultValues();
 
         private void StartGameButton_Click(object sender, EventArgs e)
         {
@@ -36,10 +31,7 @@ namespace MineSweeper.Forms
             }
         }
 
-        private void DefaultsButton_Click(object sender, EventArgs e)
-        {
-            SetDefaultValues();
-        }
+        private void DefaultsButton_Click(object sender, EventArgs e) => SetDefaultValues();
 
         private void SetDefaultValues()
         {

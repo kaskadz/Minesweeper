@@ -19,5 +19,13 @@ namespace MineSweeper.Logic
             }
             return list;
         }
+
+        public static void ForEach<TSource>(this IEnumerable<TSource> source, Action<TSource> action)
+        {
+            foreach (var obj in source)
+            {
+                action(obj);
+            }
+        }
     }
 }

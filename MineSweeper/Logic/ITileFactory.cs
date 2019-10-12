@@ -2,6 +2,6 @@
 {
     internal interface ITileFactory
     {
-        Tile Create(int column, int row, bool hasMine);
+        ITile Create(int column, int row, bool hasMine);
     }
 }

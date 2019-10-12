@@ -65,7 +65,8 @@
     <Compile Include="Logic\GameState.cs" />
     <Compile Include="Logic\ITile.cs" />
     <Compile Include="Logic\ITileFactory.cs" />
-    <Compile Include="Logic\Tile.cs">
+    <Compile Include="Logic\Tile.cs" />
+    <Compile Include="Forms\TileButton.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Logic\TileCallbacks.cs" />

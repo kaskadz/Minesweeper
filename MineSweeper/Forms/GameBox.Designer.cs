@@ -134,7 +134,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = " ";
             this.UseWaitCursor = true;
-            this.Load += new System.EventHandler(this.GameBox_Load);
             this.LayoutPanel.ResumeLayout(false);
             this.MenuLayoutPanel.ResumeLayout(false);
             this.MenuLayoutPanel.PerformLayout();
@@ -145,10 +144,10 @@
         #endregion
 
         public System.Windows.Forms.TableLayoutPanel LayoutPanel;
-        public System.Windows.Forms.Panel BoardPanel;
         private System.Windows.Forms.TableLayoutPanel MenuLayoutPanel;
         private System.Windows.Forms.Button NewGameButton;
-        public System.Windows.Forms.Label MinesLeftCounter;
-        public System.Windows.Forms.Label TimerDisplay;
+        private System.Windows.Forms.Panel BoardPanel;
+        private System.Windows.Forms.Label MinesLeftCounter;
+        private System.Windows.Forms.Label TimerDisplay;
     }
 }

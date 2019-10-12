@@ -21,22 +21,23 @@ namespace MineSweeper.Logic
                 : new Point(0, ((gameSettings.Columns - gameSettings.Rows) * _tileSize) / 2);
         }
 
-        public Tile Create(int column, int row, bool hasMine)
+        public ITile Create(int column, int row, bool hasMine)
         {
-            var tile = new Tile(column, row, hasMine, _board, _tileCallbacks)
-            {
-                Size = new Size(_tileSize, _tileSize),
-                Location = TileLocation(column, row),
-                FlatStyle = FlatStyle.Flat,
-                FlatAppearance =
-                {
-                    BorderSize = 1,
-                    BorderColor = Color.Gray
-                },
-                BackgroundImageLayout = ImageLayout.Stretch
-            };
+            var tile = new Tile(column, row, hasMine, _board, _tileCallbacks);
+
+            SetButtonProperties(column, row, tile.TileButton);
 
             return tile;
+        }
+
+        private void SetButtonProperties(int column, int row, ButtonBase button)
+        {
+            button.Size = new Size(_tileSize, _tileSize);
+            button.Location = TileLocation(column, row);
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderSize = 1;
+            button.FlatAppearance.BorderColor = Color.Gray;
+            button.BackgroundImageLayout = ImageLayout.Stretch;
         }
 
         private Point TileLocation(int column, int row) =>

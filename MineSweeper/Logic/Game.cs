@@ -37,18 +37,24 @@ namespace MineSweeper.Logic
             _state = GameState.NotStarted;
         }
 
-        private void BoomCallback(ITile triggeredTile)
+        private void TileFlaggedCallback(bool enableFlag)
         {
-            _gameTimer.Stop();
-            _state = GameState.Failed;
-            _board.RevealMinesAndLockAll(triggeredTile);
+            _flaggedCount += enableFlag ? 1 : -1;
+            UpdateMinesLeftDisplay();
         }
 
         private void TileFlippedCallback(ITile flippedTile)
         {
             StartIfNotAlreadyStarted();
-            _board.FlipNearbyIfCold(flippedTile);
+            flippedTile.FlipNearbyIfCold();
             IncrementFlipCountAndCheckIfWon();
+        }
+
+        private void BoomCallback(ITile triggeredTile)
+        {
+            _gameTimer.Stop();
+            _state = GameState.Failed;
+            _board.RevealMinesAndLockAll(triggeredTile);
         }
 
         private void IncrementFlipCountAndCheckIfWon()
@@ -59,12 +65,6 @@ namespace MineSweeper.Logic
                 _state = GameState.Won;
                 _board.RevealMinesAndLockAll(null);
             }
-        }
-
-        private void TileFlaggedCallback(bool enableFlag)
-        {
-            _flaggedCount += enableFlag ? 1 : -1;
-            UpdateMinesLeftDisplay();
         }
 
         private void StartIfNotAlreadyStarted()
@@ -78,50 +78,43 @@ namespace MineSweeper.Logic
 
         public void SetUp()
         {
-            _gameBox.MinesLeftCounter.Text = _gameSettings.MinesCount.ToString("0000");
-            _gameBox.TimerDisplay.Text = "0000";
+            _gameBox.SetMinesLeftDisplay(_gameSettings.MinesCount);
+            UpdateTimerDisplay();
             InitializeBoard();
         }
 
         public void CleanUp()
         {
             _gameTimer.Stop();
-            _gameBox.BoardPanel.Controls.Clear();
-        }
-
-        private void UpdateMinesLeftDisplay()
-        {
-            _gameBox.MinesLeftCounter.Text =
-                (_gameSettings.MinesCount - _flaggedCount).ToString("0000");
+            _gameBox.ClearBoardPanel();
         }
 
         private void UpdateTimerDisplay(object sender, EventArgs e)
         {
             _secondsElapsed += 1;
-            _gameBox.TimerDisplay.Text = _secondsElapsed.ToString("0000");
+            UpdateTimerDisplay();
         }
+
+        private void UpdateMinesLeftDisplay() =>
+            _gameBox.SetMinesLeftDisplay(_gameSettings.MinesCount - _flaggedCount);
+
+        private void UpdateTimerDisplay() =>
+            _gameBox.SetTimerDisplayState(_secondsElapsed);
 
         private void InitializeBoard()
         {
-            var mineDistribution = Enumerable
+            var tiles = Enumerable
                 .Range(0, _gameSettings.Size)
                 .ToList()
                 .Shuffle()
-                .Select(i => i < _gameSettings.MinesCount);
+                .Select(i => i < _gameSettings.MinesCount)
+                .Select((hasMine, i) =>
+                    (column: i / _gameSettings.Columns, row: i % _gameSettings.Rows, hasMine))
+                .Select(x => _tileFactory.Create(x.column, x.row, x.hasMine))
+                .ToList();
 
-            using (var hasMineStatus = mineDistribution.GetEnumerator())
-            {
-                for (int column = 0; column < _gameSettings.Columns; column++)
-                {
-                    for (int row = 0; row < _gameSettings.Rows; row++)
-                    {
-                        hasMineStatus.MoveNext();
-                        var tile = _tileFactory.Create(column, row, hasMineStatus.Current);
-                        _board[column, row] = tile;
-                        _gameBox.BoardPanel.Controls.Add(tile);
-                    }
-                }
-            }
+            tiles.ForEach(button => _board.AddTile(button));
+            _gameBox.AddTiles(tiles);
         }
     }
 }

@@ -12,10 +12,11 @@
             _board = new ITile[gameSettings.Columns, gameSettings.Rows];
         }
 
-        public ITile this[int column, int row]
+        public ITile this[int column, int row] => _board[column, row];
+
+        public void AddTile(ITile tile)
         {
-            get => _board[column, row];
-            set => _board[column, row] = value;
+            _board[tile.Column, tile.Row] = tile;
         }
 
         public void RevealMinesAndLockAll(ITile triggeredTile)
@@ -23,20 +24,6 @@
             foreach (ITile tile in _board)
             {
                 tile.RevealMineAndLock(triggeredTile);
-            }
-        }
-
-        public void FlipNearbyIfCold(ITile flippedTile)
-        {
-            if (flippedTile.Heat == 0)
-            {
-                foreach (ITile flippedTileNeighbor in flippedTile.Neighbors)
-                {
-                    if (flippedTileNeighbor.State == TileState.Unfilpped)
-                    {
-                        flippedTileNeighbor.Flip();
-                    }
-                }
             }
         }
     }

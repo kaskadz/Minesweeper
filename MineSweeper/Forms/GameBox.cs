@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using MineSweeper.Logic;
 
 namespace MineSweeper.Forms
 {
-    public partial class GameBox : Form
+    internal partial class GameBox : Form
     {
         private Game _game;
 
@@ -27,8 +29,21 @@ namespace MineSweeper.Forms
             }
         }
 
-        private void GameBox_Load(object sender, EventArgs e)
+        public void ClearBoardPanel() => BoardPanel.Controls.Clear();
+
+        public void AddTiles(IEnumerable<ITile> tiles)
         {
+            var tileButtons = tiles
+                .Select(tile => tile.TileButton)
+                .Cast<Control>()
+                .ToArray();
+            BoardPanel.Controls.AddRange(tileButtons);
         }
+
+        public void SetMinesLeftDisplay(int minesLeftCount) =>
+            MinesLeftCounter.Text = minesLeftCount.ToString("0000");
+
+        public void SetTimerDisplayState(int timeElapsed) =>
+            TimerDisplay.Text = timeElapsed.ToString("0000");
     }
 }

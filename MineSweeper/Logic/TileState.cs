@@ -7,6 +7,6 @@
         Flagged,
         Boom,
         UnflaggedMine,
-        CorrectlyFlaggeed
+        CorrectlyFlagged
     }
 }
