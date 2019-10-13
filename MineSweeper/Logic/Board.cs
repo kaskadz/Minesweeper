@@ -36,7 +36,6 @@ namespace MineSweeper.Logic
                 .Select(tuple =>
                     (column: tuple.i % GameSettings.Columns, row: tuple.i / GameSettings.Columns, tuple.hasMine))
                 .Select(x => _tileFactory.Create(x.column, x.row, x.hasMine))
-                .ToList()
                 .ForEach(AddTile);
         }
     }
