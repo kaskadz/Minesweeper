@@ -1,11 +1,20 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace MineSweeper.Logic
 {
-    internal class Solver
+    internal class Solver : ISolver
     {
         private readonly SolvingContext _solvingContext;
         private readonly Board _board;
+
+        private int _currentActionIndex;
+
+        private static readonly Action<Solver>[] Actions =
+        {
+            ctx => ctx.Flag(),
+            ctx => ctx.Dig()
+        };
 
         public Solver(SolvingContext solvingContext, Board board)
         {
@@ -24,9 +33,14 @@ namespace MineSweeper.Logic
             }
             else
             {
-                Flag();
-                Dig();
+                PerformAction();
             }
+        }
+
+        private void PerformAction()
+        {
+            Actions[_currentActionIndex++](this);
+            _currentActionIndex %= Actions.Length;
         }
 
         private bool IsStuck() =>

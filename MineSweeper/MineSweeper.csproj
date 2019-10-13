@@ -64,6 +64,7 @@
     <Compile Include="Logic\GameSettings.cs" />
     <Compile Include="Logic\GameState.cs" />
     <Compile Include="Logic\IGame.cs" />
+    <Compile Include="Logic\ISolver.cs" />
     <Compile Include="Logic\ITile.cs" />
     <Compile Include="Logic\ITileFactory.cs" />
     <Compile Include="Logic\Solver.cs" />
