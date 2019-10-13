@@ -37,6 +37,18 @@ namespace MineSweeper.Logic
             return list.Any() ? list.ElementAt(r.Next(sourceSize)) : default;
         }
 
+        public static TSource Random<TSource>(this IEnumerable<TSource> source)
+        {
+            TSource randomElement = source.RandomOrDefault();
+
+            if (randomElement.Equals(default(TSource)))
+            {
+                throw new InvalidOperationException("The source sequence is empty.");
+            }
+
+            return randomElement;
+        }
+
         public static bool In<T>(this T value, params T[] values) where T : Enum
         {
             return values.Contains(value);

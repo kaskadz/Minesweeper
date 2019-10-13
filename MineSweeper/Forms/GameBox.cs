@@ -16,6 +16,23 @@ namespace MineSweeper.Forms
             InitializeComponent();
         }
 
+        public void AddTiles(IEnumerable<ITile> tiles)
+        {
+            var tileButtons = tiles
+                .Select(tile => tile.TileButton)
+                .Cast<Control>()
+                .ToArray();
+            BoardPanel.Controls.AddRange(tileButtons);
+        }
+
+        public void ClearBoardPanel() => BoardPanel.Controls.Clear();
+
+        public void SetMinesLeftDisplay(int minesLeftCount) =>
+            MinesLeftCounter.Text = minesLeftCount.ToString("0000");
+
+        public void SetTimerDisplayState(int timeElapsed) =>
+            TimerDisplay.Text = timeElapsed.ToString("0000");
+
         private void StartGame(object caller, EventArgs e)
         {
             using (var popup = new GameSettingsPopup(_lastGameSettings))
@@ -32,25 +49,8 @@ namespace MineSweeper.Forms
             _game.SetUp();
         }
 
-        public void ClearBoardPanel() => BoardPanel.Controls.Clear();
+        private void Step(object sender, EventArgs e) => _game?.Step();
 
-        public void AddTiles(IEnumerable<ITile> tiles)
-        {
-            var tileButtons = tiles
-                .Select(tile => tile.TileButton)
-                .Cast<Control>()
-                .ToArray();
-            BoardPanel.Controls.AddRange(tileButtons);
-        }
-
-        public void SetMinesLeftDisplay(int minesLeftCount) =>
-            MinesLeftCounter.Text = minesLeftCount.ToString("0000");
-
-        public void SetTimerDisplayState(int timeElapsed) =>
-            TimerDisplay.Text = timeElapsed.ToString("0000");
-
-        private void Flag(object sender, EventArgs e) => _game?.Step();
-
-        private void Dig(object sender, EventArgs e) => _game?.Solve();
+        private void Solve(object sender, EventArgs e) => _game?.Solve();
     }
 }

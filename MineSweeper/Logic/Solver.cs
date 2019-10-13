@@ -61,10 +61,10 @@ namespace MineSweeper.Logic
 
         private void UnflipRandomTile()
         {
-            ITile startingTile = _board.AllTiles
+            _board.AllTiles
                 .Where(tile => tile.State == TileState.Unflipped)
-                .RandomOrDefault();
-            startingTile?.Flip();
+                .Random()
+                .Flip();
         }
     }
 }

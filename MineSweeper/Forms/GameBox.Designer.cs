@@ -140,7 +140,7 @@
             this.SolveButton.Text = "Solve";
             this.SolveButton.UseVisualStyleBackColor = true;
             this.SolveButton.UseWaitCursor = true;
-            this.SolveButton.Click += new System.EventHandler(this.Dig);
+            this.SolveButton.Click += new System.EventHandler(this.Solve);
             // 
             // StepButton
             // 
@@ -153,7 +153,7 @@
             this.StepButton.Text = "Step";
             this.StepButton.UseVisualStyleBackColor = true;
             this.StepButton.UseWaitCursor = true;
-            this.StepButton.Click += new System.EventHandler(this.Flag);
+            this.StepButton.Click += new System.EventHandler(this.Step);
             // 
             // GameBox
             // 

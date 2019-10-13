@@ -20,8 +20,6 @@ namespace MineSweeper.Logic
 
         public ITile this[int column, int row] => _board[column, row];
 
-        private void AddTile(ITile tile) => _board[tile.Column, tile.Row] = tile;
-
         public void RevealMinesAndLockAll(ITile triggeredTile) =>
             AllTiles.ForEach(tile => tile.RevealMineAndLock(triggeredTile));
 
@@ -38,5 +36,7 @@ namespace MineSweeper.Logic
                 .Select(x => _tileFactory.Create(x.column, x.row, x.hasMine))
                 .ForEach(AddTile);
         }
+
+        private void AddTile(ITile tile) => _board[tile.Column, tile.Row] = tile;
     }
 }
