@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 using MineSweeper.Forms;
 
 namespace MineSweeper.Logic
 {
-    internal class Game
+    internal class Game : IGame
     {
         private readonly GameBox _gameBox;
         private readonly GameSettings _gameSettings;
-        private readonly ITileFactory _tileFactory;
         private readonly Timer _gameTimer;
         private readonly Board _board;
-        private readonly SolvingContext _solvingContext;
         private readonly Solver _solver;
 
         private GameState _state;
@@ -29,18 +25,44 @@ namespace MineSweeper.Logic
             _gameTimer = new Timer { Interval = 1000 };
             _gameTimer.Tick += UpdateTimerDisplay;
 
-            _board = new Board(gameSettings);
-
             var tileCallbacks = new TileCallbacks(TileFlaggedCallback, TileFlippedCallback, BoomCallback);
-            _tileFactory = new TileFactory(gameSettings, tileCallbacks, _board);
-
-            _solvingContext = new SolvingContext(_board);
-            _solver = new Solver(_solvingContext);
+            _board = new Board(gameSettings, tileCallbacks);
+            _solver = new Solver(new SolvingContext(), _board);
 
             _secondsElapsed = 0;
             _flaggedCount = 0;
             _flippedCount = 0;
             _state = GameState.NotStarted;
+        }
+
+        public void SetUp()
+        {
+            _gameBox.SetMinesLeftDisplay(_gameSettings.MinesCount);
+            UpdateTimerDisplay();
+            _board.InitializeBoard();
+            _gameBox.AddTiles(_board.AllTiles);
+        }
+
+        public void CleanUp()
+        {
+            _gameTimer.Stop();
+            _gameBox.ClearBoardPanel();
+        }
+
+        public void Step()
+        {
+            if (_state.In(GameState.InProgress, GameState.NotStarted))
+            {
+                _solver.Step();
+            }
+        }
+
+        public void Solve()
+        {
+            while (_state.In(GameState.InProgress, GameState.NotStarted))
+            {
+                _solver.Step();
+            }
         }
 
         private void TileFlaggedCallback(bool enableFlag)
@@ -54,13 +76,13 @@ namespace MineSweeper.Logic
             StartIfNotAlreadyStarted();
             flippedTile.FlipNearbyIfCold();
             IncrementFlipCountAndCheckIfWon();
-            _solvingContext.RegisterFlip(flippedTile);
+            _solver.RegisterFlip(flippedTile);
         }
 
         private void BoomCallback(ITile triggeredTile)
         {
             _gameTimer.Stop();
-            _state = GameState.Failed;
+            _state = GameState.Lost;
             _board.RevealMinesAndLockAll(triggeredTile);
         }
 
@@ -83,19 +105,6 @@ namespace MineSweeper.Logic
             }
         }
 
-        public void SetUp()
-        {
-            _gameBox.SetMinesLeftDisplay(_gameSettings.MinesCount);
-            UpdateTimerDisplay();
-            InitializeBoard();
-        }
-
-        public void CleanUp()
-        {
-            _gameTimer.Stop();
-            _gameBox.ClearBoardPanel();
-        }
-
         private void UpdateTimerDisplay(object sender, EventArgs e)
         {
             _secondsElapsed += 1;
@@ -107,53 +116,5 @@ namespace MineSweeper.Logic
 
         private void UpdateTimerDisplay() =>
             _gameBox.SetTimerDisplayState(_secondsElapsed);
-
-        private void InitializeBoard()
-        {
-            var tiles = Enumerable
-                .Range(0, _gameSettings.Size)
-                .ToList()
-                .Shuffle()
-                .Select(i => i < _gameSettings.MinesCount)
-                .Select((hasMine, i) =>
-                    (column: i / _gameSettings.Columns, row: i % _gameSettings.Rows, hasMine))
-                .Select(x => _tileFactory.Create(x.column, x.row, x.hasMine))
-                .ToList();
-
-            tiles.ForEach(button => _board.AddTile(button));
-            _gameBox.AddTiles(tiles);
-        }
-
-        public void Step()
-        {
-            RecoverSolverIfStuck();
-            _solver.Step();
-        }
-
-        public void Solve()
-        {
-            RecoverSolverIfStuck();
-            while (_state == GameState.InProgress)
-            {
-                RecoverSolverIfStuck();
-                _solver.Step();
-            }
-        }
-
-        private void RecoverSolverIfStuck()
-        {
-            if (_solver.IsStuck())
-            {
-                UnflipRandomTile();
-            }
-        }
-
-        private void UnflipRandomTile()
-        {
-            ITile startingTile = _board.AllTiles
-                .Where(tile => tile.State == TileState.Unflipped)
-                .RandomOrDefault();
-            startingTile?.Flip();
-        }
     }
 }

@@ -33,7 +33,7 @@ namespace MineSweeper.Logic
         {
             Random r = new Random();
             var list = source.ToList();
-            int sourceSize = list.Count();
+            int sourceSize = list.Count;
             return list.Any() ? list.ElementAt(r.Next(sourceSize)) : default;
         }
 

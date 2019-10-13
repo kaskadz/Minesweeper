@@ -8,7 +8,8 @@ namespace MineSweeper.Forms
 {
     internal partial class GameBox : Form
     {
-        private Game _game;
+        private IGame _game;
+        private GameSettings _lastGameSettings;
 
         public GameBox()
         {
@@ -17,16 +18,18 @@ namespace MineSweeper.Forms
 
         private void StartGame(object caller, EventArgs e)
         {
-            using (var popup = new GameSettingsPopup())
+            using (var popup = new GameSettingsPopup(_lastGameSettings))
             {
                 if (popup.ShowDialog() == DialogResult.OK)
                 {
                     _game?.CleanUp();
 
-                    _game = new Game(this, popup.GameSettings);
-                    _game.SetUp();
+                    _lastGameSettings = popup.GameSettings;
                 }
             }
+
+            _game = new Game(this, _lastGameSettings);
+            _game.SetUp();
         }
 
         public void ClearBoardPanel() => BoardPanel.Controls.Clear();
@@ -46,14 +49,8 @@ namespace MineSweeper.Forms
         public void SetTimerDisplayState(int timeElapsed) =>
             TimerDisplay.Text = timeElapsed.ToString("0000");
 
-        private void Flag(object sender, EventArgs e)
-        {
-            _game?.Step();
-        }
+        private void Flag(object sender, EventArgs e) => _game?.Step();
 
-        private void Dig(object sender, EventArgs e)
-        {
-            _game?.Solve();
-        }
+        private void Dig(object sender, EventArgs e) => _game?.Solve();
     }
 }

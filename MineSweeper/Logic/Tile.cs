@@ -19,7 +19,9 @@ namespace MineSweeper.Logic
         public int Row { get; }
         public bool HasMine { get; }
         public int Heat => _lazyHeat.Value;
-        public IReadOnlyCollection<ITile> Neighbors => _lazyNeighbors.Value;
+
+        private IEnumerable<ITile> Neighbors => _lazyNeighbors.Value
+            .Where(tile => tile.State.IsGameTimeState());
 
         public TileState State
         {
@@ -46,7 +48,6 @@ namespace MineSweeper.Logic
         }
 
         public IEnumerable<ITile> NeighborsInStates(params TileState[] states) => Neighbors
-            .Where(tile => tile.State.IsGameTimeState())
             .Where(tile => tile.State.In(states));
 
         public void Flip()
@@ -89,14 +90,20 @@ namespace MineSweeper.Logic
 
         public void Flag()
         {
-            State = TileState.Flagged;
-            _tileCallbacks.TileFlaggedCallback(true);
+            if (State == TileState.Unflipped)
+            {
+                State = TileState.Flagged;
+                _tileCallbacks.TileFlaggedCallback(true);
+            }
         }
 
-        public void UnFlag()
+        private void UnFlag()
         {
-            State = TileState.Unflipped;
-            _tileCallbacks.TileFlaggedCallback(false);
+            if (State == TileState.Flagged)
+            {
+                State = TileState.Unflipped;
+                _tileCallbacks.TileFlaggedCallback(false);
+            }
         }
 
         private void OnMouseUp(object sender, MouseEventArgs e)

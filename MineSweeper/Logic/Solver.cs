@@ -5,23 +5,33 @@ namespace MineSweeper.Logic
     internal class Solver
     {
         private readonly SolvingContext _solvingContext;
+        private readonly Board _board;
 
-        public Solver(SolvingContext solvingContext)
+        public Solver(SolvingContext solvingContext, Board board)
         {
             _solvingContext = solvingContext;
+            _board = board;
         }
 
-        public bool IsStuck()
-        {
-            return !(_solvingContext.UnflaggedMines().Any() ||
-                     _solvingContext.UnflippedSafeTiles().Any());
-        }
+        public void RegisterFlip(ITile flippedTile) =>
+            _solvingContext.RegisterFlip(flippedTile);
 
         public void Step()
         {
-            Flag();
-            Dig();
+            if (IsStuck())
+            {
+                UnflipRandomTile();
+            }
+            else
+            {
+                Flag();
+                Dig();
+            }
         }
+
+        private bool IsStuck() =>
+            !(_solvingContext.UnflaggedMines().Any() ||
+              _solvingContext.UnflippedSafeTiles().Any());
 
         private void Flag()
         {
@@ -33,6 +43,14 @@ namespace MineSweeper.Logic
         {
             _solvingContext.UnflippedSafeTiles()
                 .ForEach(tile => tile.Flip());
+        }
+
+        private void UnflipRandomTile()
+        {
+            ITile startingTile = _board.AllTiles
+                .Where(tile => tile.State == TileState.Unflipped)
+                .RandomOrDefault();
+            startingTile?.Flip();
         }
     }
 }

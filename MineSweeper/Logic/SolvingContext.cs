@@ -5,12 +5,10 @@ namespace MineSweeper.Logic
 {
     internal class SolvingContext
     {
-        private readonly Board _board;
         private readonly LinkedList<ITile> _tilesInContext;
 
-        public SolvingContext(Board board)
+        public SolvingContext()
         {
-            _board = board;
             _tilesInContext = new LinkedList<ITile>();
         }
 
