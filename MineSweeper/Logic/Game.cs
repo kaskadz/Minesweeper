@@ -37,7 +37,7 @@ namespace MineSweeper.Logic
 
         public void SetUp()
         {
-            _gameBox.SetMinesLeftDisplay(_gameSettings.MinesCount);
+            UpdateMinesLeftDisplay();
             UpdateTimerDisplay();
             _board.InitializeBoard();
             _gameBox.AddTiles(_board.AllTiles);
