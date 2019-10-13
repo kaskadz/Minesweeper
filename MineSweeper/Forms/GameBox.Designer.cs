@@ -34,6 +34,8 @@
             this.NewGameButton = new System.Windows.Forms.Button();
             this.MinesLeftCounter = new System.Windows.Forms.Label();
             this.TimerDisplay = new System.Windows.Forms.Label();
+            this.SolveButton = new System.Windows.Forms.Button();
+            this.StepButton = new System.Windows.Forms.Button();
             this.LayoutPanel.SuspendLayout();
             this.MenuLayoutPanel.SuspendLayout();
             this.SuspendLayout();
@@ -65,17 +67,23 @@
             // 
             // MenuLayoutPanel
             // 
-            this.MenuLayoutPanel.ColumnCount = 7;
-            this.MenuLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10F));
-            this.MenuLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.MenuLayoutPanel.ColumnCount = 11;
+            this.MenuLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 5F));
+            this.MenuLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 8F));
+            this.MenuLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 5F));
+            this.MenuLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12F));
             this.MenuLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 5F));
             this.MenuLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
             this.MenuLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 5F));
-            this.MenuLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.MenuLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 10F));
-            this.MenuLayoutPanel.Controls.Add(this.NewGameButton, 3, 0);
-            this.MenuLayoutPanel.Controls.Add(this.MinesLeftCounter, 1, 0);
-            this.MenuLayoutPanel.Controls.Add(this.TimerDisplay, 5, 0);
+            this.MenuLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12F));
+            this.MenuLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 5F));
+            this.MenuLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 8F));
+            this.MenuLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 5F));
+            this.MenuLayoutPanel.Controls.Add(this.NewGameButton, 5, 0);
+            this.MenuLayoutPanel.Controls.Add(this.MinesLeftCounter, 3, 0);
+            this.MenuLayoutPanel.Controls.Add(this.TimerDisplay, 7, 0);
+            this.MenuLayoutPanel.Controls.Add(this.SolveButton, 1, 0);
+            this.MenuLayoutPanel.Controls.Add(this.StepButton, 9, 0);
             this.MenuLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MenuLayoutPanel.Location = new System.Drawing.Point(3, 3);
             this.MenuLayoutPanel.Name = "MenuLayoutPanel";
@@ -101,9 +109,9 @@
             // 
             this.MinesLeftCounter.AutoSize = true;
             this.MinesLeftCounter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MinesLeftCounter.Location = new System.Drawing.Point(53, 0);
+            this.MinesLeftCounter.Location = new System.Drawing.Point(93, 0);
             this.MinesLeftCounter.Name = "MinesLeftCounter";
-            this.MinesLeftCounter.Size = new System.Drawing.Size(94, 34);
+            this.MinesLeftCounter.Size = new System.Drawing.Size(54, 34);
             this.MinesLeftCounter.TabIndex = 1;
             this.MinesLeftCounter.Text = "0000";
             this.MinesLeftCounter.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -115,11 +123,37 @@
             this.TimerDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TimerDisplay.Location = new System.Drawing.Point(353, 0);
             this.TimerDisplay.Name = "TimerDisplay";
-            this.TimerDisplay.Size = new System.Drawing.Size(94, 34);
+            this.TimerDisplay.Size = new System.Drawing.Size(54, 34);
             this.TimerDisplay.TabIndex = 2;
             this.TimerDisplay.Text = "0000";
             this.TimerDisplay.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.TimerDisplay.UseWaitCursor = true;
+            // 
+            // SolveButton
+            // 
+            this.SolveButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.SolveButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.SolveButton.Location = new System.Drawing.Point(28, 3);
+            this.SolveButton.Name = "SolveButton";
+            this.SolveButton.Size = new System.Drawing.Size(34, 28);
+            this.SolveButton.TabIndex = 3;
+            this.SolveButton.Text = "Solve";
+            this.SolveButton.UseVisualStyleBackColor = true;
+            this.SolveButton.UseWaitCursor = true;
+            this.SolveButton.Click += new System.EventHandler(this.Dig);
+            // 
+            // StepButton
+            // 
+            this.StepButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.StepButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.StepButton.Location = new System.Drawing.Point(438, 3);
+            this.StepButton.Name = "StepButton";
+            this.StepButton.Size = new System.Drawing.Size(34, 28);
+            this.StepButton.TabIndex = 4;
+            this.StepButton.Text = "Step";
+            this.StepButton.UseVisualStyleBackColor = true;
+            this.StepButton.UseWaitCursor = true;
+            this.StepButton.Click += new System.EventHandler(this.Flag);
             // 
             // GameBox
             // 
@@ -149,5 +183,7 @@
         private System.Windows.Forms.Panel BoardPanel;
         private System.Windows.Forms.Label MinesLeftCounter;
         private System.Windows.Forms.Label TimerDisplay;
+        private System.Windows.Forms.Button SolveButton;
+        private System.Windows.Forms.Button StepButton;
     }
 }

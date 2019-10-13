@@ -45,5 +45,15 @@ namespace MineSweeper.Forms
 
         public void SetTimerDisplayState(int timeElapsed) =>
             TimerDisplay.Text = timeElapsed.ToString("0000");
+
+        private void Flag(object sender, EventArgs e)
+        {
+            _game?.Step();
+        }
+
+        private void Dig(object sender, EventArgs e)
+        {
+            _game?.Solve();
+        }
     }
 }

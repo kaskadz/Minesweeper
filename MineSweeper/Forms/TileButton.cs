@@ -11,7 +11,7 @@ namespace MineSweeper.Forms
         {
             switch (tile.State)
             {
-                case TileState.Unfilpped:
+                case TileState.Unflipped:
                     BackColor = Color.DarkGray;
                     BackgroundImage = null;
                     Text = "";

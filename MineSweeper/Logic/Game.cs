@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using MineSweeper.Forms;
@@ -12,6 +13,8 @@ namespace MineSweeper.Logic
         private readonly ITileFactory _tileFactory;
         private readonly Timer _gameTimer;
         private readonly Board _board;
+        private readonly SolvingContext _solvingContext;
+        private readonly Solver _solver;
 
         private GameState _state;
         private int _secondsElapsed;
@@ -31,6 +34,9 @@ namespace MineSweeper.Logic
             var tileCallbacks = new TileCallbacks(TileFlaggedCallback, TileFlippedCallback, BoomCallback);
             _tileFactory = new TileFactory(gameSettings, tileCallbacks, _board);
 
+            _solvingContext = new SolvingContext(_board);
+            _solver = new Solver(_solvingContext);
+
             _secondsElapsed = 0;
             _flaggedCount = 0;
             _flippedCount = 0;
@@ -48,6 +54,7 @@ namespace MineSweeper.Logic
             StartIfNotAlreadyStarted();
             flippedTile.FlipNearbyIfCold();
             IncrementFlipCountAndCheckIfWon();
+            _solvingContext.RegisterFlip(flippedTile);
         }
 
         private void BoomCallback(ITile triggeredTile)
@@ -115,6 +122,38 @@ namespace MineSweeper.Logic
 
             tiles.ForEach(button => _board.AddTile(button));
             _gameBox.AddTiles(tiles);
+        }
+
+        public void Step()
+        {
+            RecoverSolverIfStuck();
+            _solver.Step();
+        }
+
+        public void Solve()
+        {
+            RecoverSolverIfStuck();
+            while (_state == GameState.InProgress)
+            {
+                RecoverSolverIfStuck();
+                _solver.Step();
+            }
+        }
+
+        private void RecoverSolverIfStuck()
+        {
+            if (_solver.IsStuck())
+            {
+                UnflipRandomTile();
+            }
+        }
+
+        private void UnflipRandomTile()
+        {
+            ITile startingTile = _board.AllTiles
+                .Where(tile => tile.State == TileState.Unflipped)
+                .RandomOrDefault();
+            startingTile?.Flip();
         }
     }
 }

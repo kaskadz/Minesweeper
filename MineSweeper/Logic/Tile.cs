@@ -42,12 +42,16 @@ namespace MineSweeper.Logic
             Column = column;
             Row = row;
             HasMine = hasMine;
-            State = TileState.Unfilpped;
+            State = TileState.Unflipped;
         }
+
+        public IEnumerable<ITile> NeighborsInStates(params TileState[] states) => Neighbors
+            .Where(tile => tile.State.IsGameTimeState())
+            .Where(tile => tile.State.In(states));
 
         public void Flip()
         {
-            if (State == TileState.Unfilpped)
+            if (State == TileState.Unflipped)
             {
                 if (HasMine)
                 {
@@ -78,10 +82,21 @@ namespace MineSweeper.Logic
         {
             if (Heat == 0)
             {
-                Neighbors
-                    .Where(tile => tile.State == TileState.Unfilpped)
+                NeighborsInStates(TileState.Unflipped)
                     .ForEach(tile => tile.Flip());
             }
+        }
+
+        public void Flag()
+        {
+            State = TileState.Flagged;
+            _tileCallbacks.TileFlaggedCallback(true);
+        }
+
+        public void UnFlag()
+        {
+            State = TileState.Unflipped;
+            _tileCallbacks.TileFlaggedCallback(false);
         }
 
         private void OnMouseUp(object sender, MouseEventArgs e)
@@ -92,7 +107,10 @@ namespace MineSweeper.Logic
                     ToggleFlag();
                     break;
                 case MouseButtons.Left:
-                    Flip();
+                    if (State == TileState.Unflipped)
+                    {
+                        Flip();
+                    }
                     break;
             }
         }
@@ -125,7 +143,7 @@ namespace MineSweeper.Logic
         {
             switch (State)
             {
-                case TileState.Unfilpped:
+                case TileState.Unflipped:
                     Flag();
                     break;
                 case TileState.Flagged:
@@ -138,18 +156,6 @@ namespace MineSweeper.Logic
                 default:
                     throw new ArgumentOutOfRangeException(nameof(State), State, null);
             }
-        }
-
-        private void Flag()
-        {
-            State = TileState.Flagged;
-            _tileCallbacks.TileFlaggedCallback(true);
-        }
-
-        private void UnFlag()
-        {
-            State = TileState.Unfilpped;
-            _tileCallbacks.TileFlaggedCallback(false);
         }
     }
 }

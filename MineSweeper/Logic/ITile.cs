@@ -15,5 +15,8 @@ namespace MineSweeper.Logic
         void Flip();
         void RevealMineAndLock(ITile triggeredTile);
         void FlipNearbyIfCold();
+        void Flag();
+        void UnFlag();
+        IEnumerable<ITile> NeighborsInStates(params TileState[] states);
     }
 }
