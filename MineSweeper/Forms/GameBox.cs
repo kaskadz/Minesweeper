@@ -8,28 +8,13 @@ namespace MineSweeper.Forms
 {
     internal partial class GameBox : Form
     {
-        private Game _game;
+        private IGame _game;
+        private GameSettings _lastGameSettings;
 
         public GameBox()
         {
             InitializeComponent();
         }
-
-        private void StartGame(object caller, EventArgs e)
-        {
-            using (var popup = new GameSettingsPopup())
-            {
-                if (popup.ShowDialog() == DialogResult.OK)
-                {
-                    _game?.CleanUp();
-
-                    _game = new Game(this, popup.GameSettings);
-                    _game.SetUp();
-                }
-            }
-        }
-
-        public void ClearBoardPanel() => BoardPanel.Controls.Clear();
 
         public void AddTiles(IEnumerable<ITile> tiles)
         {
@@ -40,10 +25,39 @@ namespace MineSweeper.Forms
             BoardPanel.Controls.AddRange(tileButtons);
         }
 
+        public void ClearBoardPanel() => BoardPanel.Controls.Clear();
+
         public void SetMinesLeftDisplay(int minesLeftCount) =>
             MinesLeftCounter.Text = minesLeftCount.ToString("0000");
 
         public void SetTimerDisplayState(int timeElapsed) =>
             TimerDisplay.Text = timeElapsed.ToString("0000");
+
+        private void StartGame(object caller, EventArgs e)
+        {
+            using (var popup = new GameSettingsPopup(_lastGameSettings))
+            {
+                if (popup.ShowDialog() == DialogResult.OK)
+                {
+                    _game?.CleanUp();
+
+                    _lastGameSettings = popup.GameSettings;
+                    _game = new Game(this, _lastGameSettings);
+                    _game.SetUp();
+                }
+            }
+        }
+
+        private void Step(object sender, EventArgs e) => _game?.Step();
+
+        private void Solve(object sender, EventArgs e) => _game?.Solve();
+
+        public void ShowGameSummary(GameSummary gameSummary)
+        {
+            using (var popup = new GameSummaryPopup(gameSummary))
+            {
+                popup.ShowDialog();
+            }
+        }
     }
 }

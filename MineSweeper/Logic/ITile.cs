@@ -9,11 +9,12 @@ namespace MineSweeper.Logic
         int Row { get; }
         int Heat { get; }
         bool HasMine { get; }
-        TileButton TileButton { get; }
-        IReadOnlyCollection<ITile> Neighbors { get; }
         TileState State { get; }
+        TileButton TileButton { get; }
         void Flip();
-        void RevealMineAndLock(ITile triggeredTile);
+        void Flag();
         void FlipNearbyIfCold();
+        void RevealMineAndLock(ITile triggeredTile);
+        IEnumerable<ITile> NeighborsInStates(params TileState[] states);
     }
 }

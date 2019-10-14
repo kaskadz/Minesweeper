@@ -52,6 +52,12 @@
     <Compile Include="Forms\GameSettingsPopup.Designer.cs">
       <DependentUpon>GameSettingsPopup.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\GameSummaryPopup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\GameSummaryPopup.Designer.cs">
+      <DependentUpon>GameSummaryPopup.cs</DependentUpon>
+    </Compile>
     <Compile Include="Logic\Board.cs" />
     <Compile Include="Logic\Extensions.cs" />
     <Compile Include="Logic\Game.cs" />
@@ -63,8 +69,13 @@
     </Compile>
     <Compile Include="Logic\GameSettings.cs" />
     <Compile Include="Logic\GameState.cs" />
+    <Compile Include="Logic\GameSummary.cs" />
+    <Compile Include="Logic\IGame.cs" />
+    <Compile Include="Logic\ISolver.cs" />
     <Compile Include="Logic\ITile.cs" />
     <Compile Include="Logic\ITileFactory.cs" />
+    <Compile Include="Logic\Solver.cs" />
+    <Compile Include="Logic\SolvingContext.cs" />
     <Compile Include="Logic\Tile.cs" />
     <Compile Include="Forms\TileButton.cs">
       <SubType>Component</SubType>
@@ -79,6 +90,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\GameSettingsPopup.resx">
       <DependentUpon>GameSettingsPopup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\GameSummaryPopup.resx">
+      <DependentUpon>GameSummaryPopup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

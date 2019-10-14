@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MineSweeper.Logic
 {
@@ -26,6 +27,31 @@ namespace MineSweeper.Logic
             {
                 action(obj);
             }
+        }
+
+        public static TSource RandomOrDefault<TSource>(this IEnumerable<TSource> source)
+        {
+            Random r = new Random();
+            var list = source.ToList();
+            int sourceSize = list.Count;
+            return list.Any() ? list.ElementAt(r.Next(sourceSize)) : default;
+        }
+
+        public static TSource Random<TSource>(this IEnumerable<TSource> source)
+        {
+            TSource randomElement = source.RandomOrDefault();
+
+            if (randomElement.Equals(default(TSource)))
+            {
+                throw new InvalidOperationException("The source sequence is empty.");
+            }
+
+            return randomElement;
+        }
+
+        public static bool In<T>(this T value, params T[] values) where T : Enum
+        {
+            return values.Contains(value);
         }
     }
 }

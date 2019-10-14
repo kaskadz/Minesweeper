@@ -14,6 +14,7 @@
         public int Rows { get; }
         public int Columns { get; }
         public int MinesCount { get; }
-        public int Size => Columns * Rows;
+        public int TilesCount => Columns * Rows;
+        public int TilesToBeFlippedCount => TilesCount - MinesCount;
     }
 }

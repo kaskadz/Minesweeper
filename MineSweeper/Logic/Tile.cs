@@ -19,7 +19,9 @@ namespace MineSweeper.Logic
         public int Row { get; }
         public bool HasMine { get; }
         public int Heat => _lazyHeat.Value;
-        public IReadOnlyCollection<ITile> Neighbors => _lazyNeighbors.Value;
+
+        private IEnumerable<ITile> Neighbors => _lazyNeighbors.Value
+            .Where(tile => tile.State.IsGameTimeState());
 
         public TileState State
         {
@@ -42,12 +44,15 @@ namespace MineSweeper.Logic
             Column = column;
             Row = row;
             HasMine = hasMine;
-            State = TileState.Unfilpped;
+            State = TileState.Unflipped;
         }
+
+        public IEnumerable<ITile> NeighborsInStates(params TileState[] states) => Neighbors
+            .Where(tile => tile.State.In(states));
 
         public void Flip()
         {
-            if (State == TileState.Unfilpped)
+            if (State == TileState.Unflipped)
             {
                 if (HasMine)
                 {
@@ -78,9 +83,26 @@ namespace MineSweeper.Logic
         {
             if (Heat == 0)
             {
-                Neighbors
-                    .Where(tile => tile.State == TileState.Unfilpped)
+                NeighborsInStates(TileState.Unflipped)
                     .ForEach(tile => tile.Flip());
+            }
+        }
+
+        public void Flag()
+        {
+            if (State == TileState.Unflipped)
+            {
+                State = TileState.Flagged;
+                _tileCallbacks.TileFlaggedCallback(true);
+            }
+        }
+
+        private void UnFlag()
+        {
+            if (State == TileState.Flagged)
+            {
+                State = TileState.Unflipped;
+                _tileCallbacks.TileFlaggedCallback(false);
             }
         }
 
@@ -92,7 +114,10 @@ namespace MineSweeper.Logic
                     ToggleFlag();
                     break;
                 case MouseButtons.Left:
-                    Flip();
+                    if (State == TileState.Unflipped)
+                    {
+                        Flip();
+                    }
                     break;
             }
         }
@@ -125,7 +150,7 @@ namespace MineSweeper.Logic
         {
             switch (State)
             {
-                case TileState.Unfilpped:
+                case TileState.Unflipped:
                     Flag();
                     break;
                 case TileState.Flagged:
@@ -138,18 +163,6 @@ namespace MineSweeper.Logic
                 default:
                     throw new ArgumentOutOfRangeException(nameof(State), State, null);
             }
-        }
-
-        private void Flag()
-        {
-            State = TileState.Flagged;
-            _tileCallbacks.TileFlaggedCallback(true);
-        }
-
-        private void UnFlag()
-        {
-            State = TileState.Unfilpped;
-            _tileCallbacks.TileFlaggedCallback(false);
         }
     }
 }

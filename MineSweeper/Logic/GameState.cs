@@ -5,6 +5,6 @@
         NotStarted,
         InProgress,
         Won,
-        Failed
+        Lost
     }
 }
