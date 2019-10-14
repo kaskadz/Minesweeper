@@ -42,15 +42,22 @@ namespace MineSweeper.Forms
                     _game?.CleanUp();
 
                     _lastGameSettings = popup.GameSettings;
+                    _game = new Game(this, _lastGameSettings);
+                    _game.SetUp();
                 }
             }
-
-            _game = new Game(this, _lastGameSettings);
-            _game.SetUp();
         }
 
         private void Step(object sender, EventArgs e) => _game?.Step();
 
         private void Solve(object sender, EventArgs e) => _game?.Solve();
+
+        public void ShowGameSummary(GameSummary gameSummary)
+        {
+            using (var popup = new GameSummaryPopup(gameSummary))
+            {
+                popup.ShowDialog();
+            }
+        }
     }
 }

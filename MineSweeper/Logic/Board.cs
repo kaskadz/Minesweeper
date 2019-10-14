@@ -26,7 +26,7 @@ namespace MineSweeper.Logic
         public void InitializeBoard()
         {
             Enumerable
-                .Range(0, GameSettings.Size)
+                .Range(0, GameSettings.TilesCount)
                 .ToList()
                 .Shuffle()
                 .Select(i => i < GameSettings.MinesCount)

@@ -54,16 +54,15 @@
             this.LayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.LayoutPanel.Size = new System.Drawing.Size(506, 546);
             this.LayoutPanel.TabIndex = 0;
-            this.LayoutPanel.UseWaitCursor = true;
             // 
             // BoardPanel
             // 
+            this.BoardPanel.Cursor = System.Windows.Forms.Cursors.Hand;
             this.BoardPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.BoardPanel.Location = new System.Drawing.Point(3, 43);
             this.BoardPanel.Name = "BoardPanel";
             this.BoardPanel.Size = new System.Drawing.Size(500, 500);
             this.BoardPanel.TabIndex = 0;
-            this.BoardPanel.UseWaitCursor = true;
             // 
             // MenuLayoutPanel
             // 
@@ -91,7 +90,6 @@
             this.MenuLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.MenuLayoutPanel.Size = new System.Drawing.Size(500, 34);
             this.MenuLayoutPanel.TabIndex = 1;
-            this.MenuLayoutPanel.UseWaitCursor = true;
             // 
             // NewGameButton
             // 
@@ -102,7 +100,6 @@
             this.NewGameButton.TabIndex = 0;
             this.NewGameButton.Text = "New Game";
             this.NewGameButton.UseVisualStyleBackColor = true;
-            this.NewGameButton.UseWaitCursor = true;
             this.NewGameButton.Click += new System.EventHandler(this.StartGame);
             // 
             // MinesLeftCounter
@@ -115,7 +112,6 @@
             this.MinesLeftCounter.TabIndex = 1;
             this.MinesLeftCounter.Text = "0000";
             this.MinesLeftCounter.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.MinesLeftCounter.UseWaitCursor = true;
             // 
             // TimerDisplay
             // 
@@ -127,7 +123,6 @@
             this.TimerDisplay.TabIndex = 2;
             this.TimerDisplay.Text = "0000";
             this.TimerDisplay.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.TimerDisplay.UseWaitCursor = true;
             // 
             // SolveButton
             // 
@@ -139,7 +134,6 @@
             this.SolveButton.TabIndex = 3;
             this.SolveButton.Text = "Solve";
             this.SolveButton.UseVisualStyleBackColor = true;
-            this.SolveButton.UseWaitCursor = true;
             this.SolveButton.Click += new System.EventHandler(this.Solve);
             // 
             // StepButton
@@ -152,22 +146,21 @@
             this.StepButton.TabIndex = 4;
             this.StepButton.Text = "Step";
             this.StepButton.UseVisualStyleBackColor = true;
-            this.StepButton.UseWaitCursor = true;
             this.StepButton.Click += new System.EventHandler(this.Step);
             // 
             // GameBox
             // 
+            this.AcceptButton = this.NewGameButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(506, 546);
             this.Controls.Add(this.LayoutPanel);
-            this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
+            this.Cursor = System.Windows.Forms.Cursors.Default;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "GameBox";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = " ";
-            this.UseWaitCursor = true;
             this.LayoutPanel.ResumeLayout(false);
             this.MenuLayoutPanel.ResumeLayout(false);
             this.MenuLayoutPanel.PerformLayout();

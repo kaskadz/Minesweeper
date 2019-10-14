@@ -10,7 +10,7 @@ namespace MineSweeper.Logic
         private readonly GameSettings _gameSettings;
         private readonly Timer _gameTimer;
         private readonly Board _board;
-        private readonly Solver _solver;
+        private readonly ISolver _solver;
 
         private GameState _state;
         private int _secondsElapsed;
@@ -25,7 +25,7 @@ namespace MineSweeper.Logic
             _gameTimer = new Timer { Interval = 1000 };
             _gameTimer.Tick += UpdateTimerDisplay;
 
-            var tileCallbacks = new TileCallbacks(TileFlaggedCallback, TileFlippedCallback, BoomCallback);
+            var tileCallbacks = new TileCallbacks(TileFlaggedCallback, TileFlippedCallback, Loose);
             _board = new Board(gameSettings, tileCallbacks);
             _solver = new Solver(new SolvingContext(), _board);
 
@@ -79,21 +79,28 @@ namespace MineSweeper.Logic
             _solver.RegisterFlip(flippedTile);
         }
 
-        private void BoomCallback(ITile triggeredTile)
+        private void Loose(ITile triggeredTile)
         {
             _gameTimer.Stop();
             _state = GameState.Lost;
             _board.RevealMinesAndLockAll(triggeredTile);
+            _gameBox.ShowGameSummary(GameSummary.LostGameSummary(_gameSettings, _board, _flippedCount, _secondsElapsed));
         }
 
         private void IncrementFlipCountAndCheckIfWon()
         {
-            if (++_flippedCount == _gameSettings.Size - _gameSettings.MinesCount)
+            if (++_flippedCount == _gameSettings.TilesToBeFlippedCount)
             {
-                _gameTimer.Stop();
-                _state = GameState.Won;
-                _board.RevealMinesAndLockAll(null);
+                Win();
             }
+        }
+
+        private void Win()
+        {
+            _gameTimer.Stop();
+            _state = GameState.Won;
+            _board.RevealMinesAndLockAll(null);
+            _gameBox.ShowGameSummary(GameSummary.WonGameSummary(_gameSettings, _board, _flippedCount, _secondsElapsed));
         }
 
         private void StartIfNotAlreadyStarted()
